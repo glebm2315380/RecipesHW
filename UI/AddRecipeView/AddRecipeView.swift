@@ -7,12 +7,13 @@
 
 import SwiftUI
 
-struct RecipeDetailView: View {
+struct AddRecipeView: View {
 	
 	// TODO: - Создать viewModel и вынести все свойства отслеживаемые внутрь viewModel.
 	// TODO: - Положить информацию о рецепте в локальное хранилище
 	// TODO: - Обновлять информацию в локальном хранилище при изменении
-	@State var viewModel = RecipeDetailViewModel()
+	@StateObject private var viewModel = AddRecipeViewModel()
+	@State private var isEditing: Bool = false
 	
 	var body: some View {
 		List {
@@ -21,17 +22,17 @@ struct RecipeDetailView: View {
 			cooktimeSection
 			dishesCountSection
 		}
-		.navigationTitle("Рецепт")
+		.navigationTitle("Новый рецепт")
 		.toolbar {
 			ToolbarItem(placement: .topBarTrailing) {
 				Button {
-					viewModel.isEditing.toggle()
+					isEditing.toggle()
 				} label: {
 					Image(systemName: "pencil")
 				}
 			}
 		}
-		.sheet(isPresented: $viewModel.isEditing) {
+		.sheet(isPresented: $isEditing) {
 			NavigationStack {
 				RecipeEditView()
 			}
@@ -43,7 +44,7 @@ struct RecipeDetailView: View {
 			HStack {
 				Image(systemName: "fork.knife")
 					.foregroundColor(.blue)
-				Text(viewModel.recipeName)
+				TextField("Введите название",text: $viewModel.recipeName)
 			}
 		}
 	}
@@ -53,7 +54,7 @@ struct RecipeDetailView: View {
 			HStack(alignment: .top) {
 				Image(systemName: "text.alignleft")
 					.foregroundColor(.green)
-				Text(viewModel.recipeDescription)
+				TextField("Введите описание", text: $viewModel.recipeDescription)
 			}
 		}
 	}
@@ -63,7 +64,14 @@ struct RecipeDetailView: View {
 			HStack {
 				Image(systemName: "clock")
 					.foregroundColor(.orange)
-				Text(viewModel.timeText)
+				Picker("Выберите время", selection: $viewModel.selectedTime) {
+					Text("30 мин")
+					 .tag(0)
+				 Text("1 час")
+					 .tag(1)
+				 Text("2 часа")
+					 .tag(2)
+			 }
 			}
 		}
 	}
@@ -73,13 +81,12 @@ struct RecipeDetailView: View {
 			HStack {
 				Image(systemName: "person.2.fill")
 					.foregroundColor(.purple)
-				Text("\(viewModel.dishesCount)")
+				TextField("Введите кол-во гостей", text: $viewModel.dishesCount)
 			}
 		}
 	}
 	
-	
-}
+	}
 
 #Preview {
 	NavigationStack {

@@ -11,7 +11,7 @@ struct ContentView: View {
 	var body: some View {
 		TabView {
 			NavigationStack {
-				RecipeDetailView()
+				ListRecipeView()
 			}
 			.tag(0)
 			.tabItem {

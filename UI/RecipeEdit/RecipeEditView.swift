@@ -5,15 +5,13 @@
 //  Created by Захар Литвинчук on 28.09.2025.
 //
 
+
 import SwiftUI
 
-struct RecipeEdit: View {
+struct RecipeEditView: View {
 
 	// TODO: - Создать viewModel и вынести все свойства отслеживаемые внутрь viewModel.
-	@State private var recipeName: String = ""
-	@State private var recipeDescription: String = ""
-	@State private var dishesCount: Int = 1
-	@State private var selectedTime: Int = 0
+	@StateObject private var viewModel = RecipeEditViewModel()
 	
 	var body: some View {
 		VStack(alignment: .leading, spacing: 24) {
@@ -35,7 +33,7 @@ struct RecipeEdit: View {
 			Text("Название рецепта")
 				.font(.headline)
 
-			TextField("Новое название", text: $recipeName)
+			TextField("Новое название", text: $viewModel.recipeName)
 				.textFieldStyle(.roundedBorder)
 		}
 	}
@@ -45,7 +43,7 @@ struct RecipeEdit: View {
 			Text("Описание рецепта")
 				.font(.headline)
 			
-			TextField("Введите описание...", text: $recipeDescription, axis: .vertical)
+			TextField("Введите описание...", text: $viewModel.recipeDescription, axis: .vertical)
 				.lineLimit(5, reservesSpace: true)
 				.textFieldStyle(.roundedBorder)
 		}
@@ -56,7 +54,7 @@ struct RecipeEdit: View {
 			Text("Время приготовления")
 				.font(.headline)
 
-			Picker("Время приготовления", selection: $selectedTime) {
+			Picker("Время приготовления", selection: $viewModel.selectedTime) {
 				Text("30 мин")
 					.tag(0)
 				Text("1 час")
@@ -75,8 +73,8 @@ struct RecipeEdit: View {
 
 			Spacer()
 
-			Stepper(value: $dishesCount, in: 1...20) {
-				Text("\(dishesCount)")
+			Stepper(value: $viewModel.dishesCount, in: 1...20) {
+				Text("\(viewModel.dishesCount)")
 					.frame(width: 30)
 			}
 		}
@@ -96,6 +94,6 @@ struct RecipeEdit: View {
 
 #Preview {
 	NavigationStack {
-		RecipeEdit()
+		RecipeEditView()
 	}
 }

@@ -7,12 +7,9 @@
 
 import SwiftUI
 
-struct RecipeDetailView: View {
+struct SaveRecipeView: View {
 	
-	// TODO: - Создать viewModel и вынести все свойства отслеживаемые внутрь viewModel.
-	// TODO: - Положить информацию о рецепте в локальное хранилище
-	// TODO: - Обновлять информацию в локальном хранилище при изменении
-	@State var viewModel = RecipeDetailViewModel()
+	@StateObject var viewModel = SaveRecipeViewModel()
 	
 	var body: some View {
 		List {
@@ -22,20 +19,7 @@ struct RecipeDetailView: View {
 			dishesCountSection
 		}
 		.navigationTitle("Рецепт")
-		.toolbar {
-			ToolbarItem(placement: .topBarTrailing) {
-				Button {
-					viewModel.isEditing.toggle()
-				} label: {
-					Image(systemName: "pencil")
-				}
-			}
-		}
-		.sheet(isPresented: $viewModel.isEditing) {
-			NavigationStack {
-				RecipeEditView()
-			}
-		}
+		saveButtonContainer
 	}
 	
 	private var nameSection: some View {
@@ -43,7 +27,7 @@ struct RecipeDetailView: View {
 			HStack {
 				Image(systemName: "fork.knife")
 					.foregroundColor(.blue)
-				Text(viewModel.recipeName)
+				TextField("Новое название", text: $viewModel.recipeName)
 			}
 		}
 	}
@@ -53,7 +37,7 @@ struct RecipeDetailView: View {
 			HStack(alignment: .top) {
 				Image(systemName: "text.alignleft")
 					.foregroundColor(.green)
-				Text(viewModel.recipeDescription)
+				TextField("Новое oписание", text: $viewModel.recipeDescription)
 			}
 		}
 	}
@@ -64,6 +48,7 @@ struct RecipeDetailView: View {
 				Image(systemName: "clock")
 					.foregroundColor(.orange)
 				Text(viewModel.timeText)
+
 			}
 		}
 	}
@@ -73,16 +58,28 @@ struct RecipeDetailView: View {
 			HStack {
 				Image(systemName: "person.2.fill")
 					.foregroundColor(.purple)
-				Text("\(viewModel.dishesCount)")
+				TextField("Введите количество порций",text: $viewModel.dishesCount)
 			}
 		}
 	}
 	
+	private var saveButtonContainer: some View {
+		Button {
+			viewModel.newRecipeData()
+		} label: {
+			Text("Сохранить")
+				.frame(maxWidth: .infinity)
+				.padding(.vertical, 10)
+		}
+		.padding(10)
+		.buttonStyle(.borderedProminent)
+		
+	}
 	
 }
 
 #Preview {
 	NavigationStack {
-		RecipeDetailView()
+		SaveRecipeView()
 	}
 }
